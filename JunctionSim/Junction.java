@@ -1,20 +1,20 @@
 package JunctionSim;
 
+import static JunctionSim.Environment.HORIZONTAL_INITIAL_WEIGHT;
+import static JunctionSim.Environment.HORIZONTAL_WIDTH;
+import static JunctionSim.Environment.VERTICAL_INITIAL_WEIGHT;
+import static JunctionSim.Environment.VERTICAL_WIDTH;
+
 public class Junction
 {
     // Every index in the AxisVectors represents a "lane". Every entry represents the numberOfCars waiting in that lane.
     public Axis verticalAxis;
     public Axis horizontalAxis;
 
-    public Junction(int verticalWidth, int horizontalWidth)
+    public Junction()
     {
-        verticalAxis   = new Axis(verticalWidth, 0);
-        horizontalAxis = new Axis(horizontalWidth, 0);
-    }
-    public Junction(int verticalWidth, int horizontalWidth, int init)
-    {
-        verticalAxis   = new Axis(verticalWidth, init);
-        horizontalAxis = new Axis(horizontalWidth, init);
+        verticalAxis   = new Axis(VERTICAL_WIDTH, VERTICAL_INITIAL_WEIGHT);
+        horizontalAxis = new Axis(HORIZONTAL_WIDTH, HORIZONTAL_INITIAL_WEIGHT);
     }
     public int getDensity()
     {

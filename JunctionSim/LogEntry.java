@@ -12,17 +12,19 @@ public class LogEntry
     public int spawnedHorizontalCars;
 
 
-    public void showLog()
-    {   // writing of the logs to console can be greatly optimized, I think
-        System.out.println("Cycle " + cycle + ":");
-        System.out.println("Horizontal Cars: " + carsHorizontal);
-        System.out.println("Vertical Cars: " + carsVertical);
-        System.out.println("Allocated Vertical Time: " + allocatedTime[0]);
-        System.out.println("Allocated Horizontal Time: " + allocatedTime[1]);
-        System.out.println("Passed Vertical Cars: " + passedVerticalCars);
-        System.out.println("Spawned Horizontal Cars: " + spawnedHorizontalCars);
-        System.out.println("Passed Horizontal Cars: " + passedHorizontalCars);
-        System.out.println("Spawned Vertical Cars: " + spawnedVerticalCars);
-        System.out.println("---------------------------------");
+    public void Show()
+    {
+        String output = "";
+        output += ("Cycle " + cycle + ":\n");
+        output += ("Vertical Cars: " + carsVertical + "\n");
+        output += ("Horizontal Cars: " + carsHorizontal + "\n");
+        output += ("Allocated Vertical Time: " + allocatedTime[0] + "\n");
+        output += ("Allocated Horizontal Time: " + allocatedTime[1] + "\n");
+        output += ("Passed Vertical Cars: " + passedVerticalCars + "\n");
+        output += ("Spawned Horizontal Cars: " + spawnedHorizontalCars + "\n");
+        output += ("Passed Horizontal Cars: " + passedHorizontalCars + "\n");
+        output += ("Spawned Vertical Cars: " + spawnedVerticalCars + "\n");
+        output += ("---------------------------------");
+        System.out.println(output);
     }
 }

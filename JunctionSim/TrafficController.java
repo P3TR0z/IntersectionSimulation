@@ -1,5 +1,14 @@
 package JunctionSim;
 
+
+import static JunctionSim.Environment.CAR_DELAY;
+import static JunctionSim.Environment.CAR_SPAWN_RATE;
+import static JunctionSim.Environment.CAR_SPEED;
+import static JunctionSim.Environment.HORIZONTAL_INITIAL_WEIGHT;
+import static JunctionSim.Environment.HORIZONTAL_WIDTH;
+import static JunctionSim.Environment.VERTICAL_INITIAL_WEIGHT;
+import static JunctionSim.Environment.VERTICAL_WIDTH;
+
 // todo:
 public class TrafficController
 {
@@ -8,11 +17,7 @@ public class TrafficController
 
     TrafficController()
     {
-        junction = new Junction(Environment.VERTICAL_WIDTH, Environment.HORIZONTAL_WIDTH, Environment.INIT_WEIGHT);
-    }
-    TrafficController(int initialWeight)
-    {
-        junction = new Junction(Environment.VERTICAL_WIDTH, Environment.HORIZONTAL_WIDTH, initialWeight);
+        junction = new Junction();
     }
     // computes how many cars pass in the allocated time, removes them from the stack and returns the sum over all lanes
     public int removeCars(Axis axis, int time)
@@ -21,7 +26,7 @@ public class TrafficController
         for (int i = 0; i < axis.getWidth(); i++)
         {
             int initialWeight = axis.getWeight(i);
-            sum = sum + initialWeight - axis.setWeight(i, initialWeight - (1 + (time - Environment.CAR_SPEED) / Environment.CAR_DELAY));
+            sum = sum + initialWeight - axis.setWeight(i, initialWeight - (1 + (time - CAR_SPEED) / CAR_DELAY));
         }
         return sum;
     }
@@ -30,8 +35,8 @@ public class TrafficController
         int sum = 0;
         for (int i = 0; i < axis.getWidth(); i++)
         {
-            sum += time / Environment.CAR_SPAWN_RATE;
-            axis.setWeight(i, axis.getWeight(i) + time / Environment.CAR_SPAWN_RATE);
+            sum += time / CAR_SPAWN_RATE;
+            axis.setWeight(i, axis.getWeight(i) + time / CAR_SPAWN_RATE);
         }
         return sum;
     }

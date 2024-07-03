@@ -2,6 +2,8 @@ package JunctionSim;
 
 import java.util.ArrayList;
 
+import static JunctionSim.Environment.SIMULATION_LENGTH;
+
 public class Simulation {
     private TrafficController trafficCtrl;
     private LightController lightCtrl;
@@ -16,7 +18,7 @@ public class Simulation {
     {
         ArrayList<LogEntry> ret = new ArrayList<>();
         // per cycle
-        for (int i = 0; i < Environment.SIMULATION_LENGTH; i++)
+        for (int i = 0; i < SIMULATION_LENGTH; i++)
         {
             LogEntry entry = new LogEntry();
             entry.cycle = i;
