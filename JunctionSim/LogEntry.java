@@ -11,7 +11,6 @@ public class LogEntry
     public int passedHorizontalCars;
     public int spawnedHorizontalCars;
 
-
     public void Show()
     {
         String output = "";
