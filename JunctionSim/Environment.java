@@ -3,7 +3,7 @@ package JunctionSim;
 // Simulation helper class
 public final class Environment {
     public static final int SIMULATION_LENGTH = 4; // in cycles
-    public static final int CYCLE_LENGTH = 60; // how long a cycle lasts in seconds
+    public static final int CYCLE_LENGTH = 60; // how long a cycle should last in ms
     public static final int CAR_SPEED = 10; // amount of time needed for one car to pass through the intersection
     public static final int CAR_DELAY = 2; // delay between each car's movement
     public static final int VERTICAL_WIDTH = 1; // number of vertical lanes;

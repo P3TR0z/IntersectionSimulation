@@ -9,9 +9,9 @@ import static JunctionSim.Environment.VERTICAL_WIDTH;
 
 public class Junction
 {
+    // Every index in the AxisVectors represents a "lane". Every entry represents the numberOfCars waiting in that lane.
     protected ConcurrentHashMap<Integer, Integer> verticalAxis;
     protected ConcurrentHashMap<Integer, Integer> horizontalAxis;
-    // Every index in the AxisVectors represents a "lane". Every entry represents the numberOfCars waiting in that lane.
 
     public Junction()
     {

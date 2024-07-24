@@ -1,6 +1,5 @@
 package JunctionSim;
 
-import java.sql.SQLOutput;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static JunctionSim.Environment.CAR_SPAWN_AMOUNT;

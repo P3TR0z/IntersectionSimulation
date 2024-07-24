@@ -6,13 +6,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import static JunctionSim.Environment.CAR_DELAY;
 import static JunctionSim.Environment.CAR_SPAWN_DELAY;
 import static JunctionSim.Environment.CAR_SPEED;
-import static JunctionSim.Environment.HORIZONTAL_WIDTH;
-import static JunctionSim.Environment.VERTICAL_WIDTH;
+
 
 public class TrafficController
 {
     public Junction junction;
-    //private static Environment workingConditions;
 
     TrafficController()
     {
@@ -29,7 +27,7 @@ public class TrafficController
         }
         return sum;
     }
-    public int spawnCars(ConcurrentHashMap<Integer, Integer> axis, int time) // de pus in thread separat
+    public int spawnCars(ConcurrentHashMap<Integer, Integer> axis, int time)
     {
         int sum = 0;
         for (int i = 0; i < axis.size(); i++)
