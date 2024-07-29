@@ -37,12 +37,27 @@ public class Simulation {
             // 0 = vertical time, 1 = horizontal time; The function allocates the amount of time each axis gets for "green light"
             int time[] = lightCtrl.computeTime(trafficCtrl.junction.getWeight(trafficCtrl.junction.verticalAxis), trafficCtrl.junction.getWeight(trafficCtrl.junction.horizontalAxis));
             entry.allocatedTime = time;
+
             // Remove cars from the axis with green light for some amount of time
-            // maybe should compare the two times and do the greater one first.
-            entry.passedVerticalCars = trafficCtrl.removeCars(trafficCtrl.junction.verticalAxis, time[0]);
-            //entry.spawnedHorizontalCars = trafficCtrl.spawnCars(trafficCtrl.junction.horizontalAxis, time[0]);
-            entry.passedHorizontalCars = trafficCtrl.removeCars(trafficCtrl.junction.horizontalAxis, time[1]);
-            //entry.spawnedVerticalCars = trafficCtrl.spawnCars(trafficCtrl.junction.verticalAxis, time[1]);
+            if (lightCtrl.verticalPriority) // if vertical axis has green light first
+            {
+                entry.passedVerticalCars = trafficCtrl.removeCars(trafficCtrl.junction.verticalAxis, time[0]);
+                if (time[1] != 0)
+                {
+                    entry.passedHorizontalCars = trafficCtrl.removeCars(trafficCtrl.junction.horizontalAxis, time[1]);
+                }
+                else entry.passedHorizontalCars = 0;
+            }
+            else // if horizontal axis has priority
+            {
+                entry.passedHorizontalCars = trafficCtrl.removeCars(trafficCtrl.junction.horizontalAxis, time[1]);
+                if (time[0] != 0)
+                {
+                    entry.passedVerticalCars = trafficCtrl.removeCars(trafficCtrl.junction.verticalAxis, time[0]);
+                }
+                else  entry.passedVerticalCars = 0;
+            }
+            // get number of cars spawned for logging purposes
             entry.spawnedVerticalCars = Spawner.getCounterSpawnedVertical();
             Spawner.setCounterSpawnedVertical(0);
             entry.spawnedHorizontalCars = Spawner.getCounterSpawnedHorizontal();
