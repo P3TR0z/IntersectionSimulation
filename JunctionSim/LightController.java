@@ -53,65 +53,61 @@ public class LightController
     }
     private void generateSchedule(int numberOfTurns, boolean value)
     {
-        boolean temp = true;
-        for (int i = 0; i < numberOfTurns; i++)
+        int j = numberOfTurns;
+        for (int i = 0; j > 0; i++)
         {
-            schedule.add(value);
-            if (i % 2 == 0)
+            if (i % 3 == 0)
             {
-                if (temp)
-                    schedule.add(!value);
-                temp = !temp;
+                schedule.add(i, !value);
+                continue;
             }
+            schedule.add(i, value);
+            j = j - 1;
         }
     }
     public int[] computeTimeHighDensity(int verticalWeight, int horizontalWeight)
     {
         if (schedule.size() != 0)
         {
-            if (schedule.get(0) == Boolean.TRUE)
+            verticalPriority = schedule.get(0);
+            if (schedule.get(0) == true)
             {
                 schedule.remove(0);
-                verticalPriority = true;
-                return (new int[] { CYCLE_LENGTH, 0 });
+                return (new int[]{CYCLE_LENGTH, 0});
             }
             else
             {
                 schedule.remove(0);
-                verticalPriority = false;
-                return (new int[] { 0, CYCLE_LENGTH });
+                return (new int[]{0, CYCLE_LENGTH});
             }
         }
-        int nTime;
-        if (verticalWeight >= horizontalWeight)
-        {
-            nTime = getNeededTime(verticalWeight / VERTICAL_WIDTH);
-            generateSchedule((nTime / CYCLE_LENGTH) - 1, true);
-            verticalPriority = true;
-            return new int[] { CYCLE_LENGTH, 0 };
-        }
-        else
-        {
-            nTime = getNeededTime(horizontalWeight / HORIZONTAL_WIDTH);
-            generateSchedule((nTime / CYCLE_LENGTH) - 1, false);
-            verticalPriority = false;
-            return new int[] { 0, CYCLE_LENGTH };
-        }
+        return computeTime();
     }
     // returns a tuple. index 0 = verticalTime; index 1 = horizontalTime;
     public int[] computeTime(int verticalWeight, int horizontalWeight)
     {
         if (verticalWeight > 100 && horizontalWeight > 100) // arbitrary value for a "high density"
         {
+            if(schedule.size()!=0)
+                return computeTimeHighDensity(verticalWeight,horizontalWeight);
+            int nTime;
+            if(verticalWeight>=horizontalWeight)
+            {
+                nTime=getNeededTime(verticalWeight/VERTICAL_WIDTH);
+                generateSchedule((nTime/CYCLE_LENGTH),true);
+            }
+            else
+            {
+                nTime=getNeededTime(horizontalWeight/HORIZONTAL_WIDTH);
+                generateSchedule((nTime/CYCLE_LENGTH),false);
+            }
             return computeTimeHighDensity(verticalWeight, horizontalWeight);
         }
-        if (verticalWeight + horizontalWeight < 200) // arbitrary value for low density
+        else
         {
             return computeTimeLowDensity(verticalWeight, horizontalWeight);
         }
-        return computeTime();
     }
-
     public int[] computeTime()
     {
         int ret[] = new int[2];

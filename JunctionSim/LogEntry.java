@@ -11,7 +11,7 @@ public class LogEntry
     public int passedHorizontalCars;
     public int spawnedHorizontalCars;
 
-    public void Show()
+    public String getOutput()
     {
         String output = "";
         output += ("Cycle " + cycle + ":\n");
@@ -23,7 +23,7 @@ public class LogEntry
         output += ("Spawned Horizontal Cars: " + spawnedHorizontalCars + "\n");
         output += ("Passed Horizontal Cars: " + passedHorizontalCars + "\n");
         output += ("Spawned Vertical Cars: " + spawnedVerticalCars + "\n");
-        output += ("---------------------------------");
-        System.out.println(output);
+        output += ("---------------------------------\n");
+        return output;
     }
 }

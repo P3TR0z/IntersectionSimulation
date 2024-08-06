@@ -41,7 +41,6 @@ public class TrafficController
     {
         if (previous == axis)
         {
-            System.out.println("here");
             return removeCarsNoDelay(axis, time);
         }
         previous = axis;
