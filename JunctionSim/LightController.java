@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import static JunctionSim.Environment.CAR_DELAY;
 import static JunctionSim.Environment.CAR_SPEED;
 import static JunctionSim.Environment.CYCLE_LENGTH;
+import static JunctionSim.Environment.HORIZONTAL_HIGH_DENSITY_THRESHOLD;
 import static JunctionSim.Environment.HORIZONTAL_WIDTH;
+import static JunctionSim.Environment.VERTICAL_HIGH_DENSITY_THRESHOLD;
 import static JunctionSim.Environment.VERTICAL_WIDTH;
 
 public class LightController
@@ -83,7 +85,7 @@ public class LightController
     // returns a tuple. index 0 = verticalTime; index 1 = horizontalTime;
     public int[] computeTime(int verticalWeight, int horizontalWeight)
     {
-        if (verticalWeight > 100 && horizontalWeight > 100) // arbitrary value for a "high density"
+        if (verticalWeight > VERTICAL_HIGH_DENSITY_THRESHOLD && horizontalWeight > HORIZONTAL_HIGH_DENSITY_THRESHOLD)
         {
             if(schedule.isEmpty())
             {
