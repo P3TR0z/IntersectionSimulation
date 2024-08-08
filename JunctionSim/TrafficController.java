@@ -10,8 +10,8 @@ import static JunctionSim.Environment.CAR_SPEED;
 
 public class TrafficController
 {
-    public Junction junction;
-    private static ConcurrentHashMap<Integer, Integer> previous = null;
+    private Junction junction;
+    private ConcurrentHashMap<Integer, Integer> previous = null;
     TrafficController()
     {
         junction = new Junction();
@@ -20,20 +20,26 @@ public class TrafficController
     public int removeCarsWithDelay(ConcurrentHashMap<Integer, Integer> axis, int time)
     {
         int sum = 0;
+        int canPass = (1 + (time - CAR_SPEED) / CAR_DELAY); // number of cars that can pass in the given time
         for (int i = 0; i < axis.size(); i++)
         {
             int initialWeight = junction.getWeight(axis, i);
-            sum = sum + initialWeight - junction.setWeight(axis, i, initialWeight - (1 + (time - CAR_SPEED) / CAR_DELAY));
+            int remainingWeight = initialWeight - canPass;
+            junction.setWeight(axis, i, remainingWeight);
+            sum = sum + ((remainingWeight > 0) ? (initialWeight - remainingWeight) : initialWeight);
         }
         return sum;
     }
     public int removeCarsNoDelay(ConcurrentHashMap<Integer, Integer> axis, int time)
     {
         int sum = 0;
+        int canPass = time / CAR_DELAY;
         for (int i = 0; i < axis.size(); i++)
         {
             int initialWeight = junction.getWeight(axis, i);
-            sum = sum + initialWeight - junction.setWeight(axis, i, initialWeight - (time / CAR_DELAY));
+            int remainingWeight = initialWeight - canPass;
+            junction.setWeight(axis, i, remainingWeight);
+            sum = sum + ((remainingWeight > 0) ? (initialWeight - remainingWeight) : initialWeight);
         }
         return sum;
     }
@@ -46,7 +52,11 @@ public class TrafficController
         previous = axis;
         return removeCarsWithDelay(axis, time);
     }
-    public int spawnCars(ConcurrentHashMap<Integer, Integer> axis, int time)
+    public Junction getJunction()
+    {
+        return junction;
+    }
+    public int spawnCars(ConcurrentHashMap<Integer, Integer> axis, int time) // deprecated
     {
         int sum = 0;
         for (int i = 0; i < axis.size(); i++)

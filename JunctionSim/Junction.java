@@ -22,15 +22,14 @@ public class Junction
         for (int i = 0; i < HORIZONTAL_WIDTH; i++)
             horizontalAxis.put(i, HORIZONTAL_INITIAL_WEIGHT);
     }
-    public int setWeight(ConcurrentHashMap<Integer, Integer> axis, int index, int value)
+    public void setWeight(ConcurrentHashMap<Integer, Integer> axis, int index, int value)
     {
-        if (value >= 0)
+        if (value > 0)
         {
             axis.replace(index, value);
-            return value;
+            return;
         }
         axis.replace(index, 0);
-        return 0;
     }
     public int getWidth(ConcurrentHashMap<Integer, Integer> axis)
     {

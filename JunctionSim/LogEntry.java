@@ -1,5 +1,9 @@
 package JunctionSim;
 
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+@Builder // todo builder thing properly
 public class LogEntry
 {
     public int cycle;
@@ -11,6 +15,7 @@ public class LogEntry
     public int passedHorizontalCars;
     public int spawnedHorizontalCars;
 
+    LogEntry(){}
     public String getOutput()
     {
         String output = "";

@@ -6,7 +6,6 @@ import static JunctionSim.Environment.CAR_SPAWN_AMOUNT;
 import static JunctionSim.Environment.CAR_SPAWN_DELAY;
 import static java.lang.Thread.sleep;
 
-// todo:
 public class CarSpawner implements Runnable
 {
     private Junction j;
@@ -41,9 +40,12 @@ public class CarSpawner implements Runnable
             counterSpawnedVertical.getAndAdd(CAR_SPAWN_AMOUNT * j.verticalAxis.size());
             j.increment(j.horizontalAxis, CAR_SPAWN_AMOUNT * j.horizontalAxis.size());
             counterSpawnedHorizontal.getAndAdd(CAR_SPAWN_AMOUNT);
-            try {
+            try
+            {
                 sleep(CAR_SPAWN_DELAY);
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e)
+            {
                 System.out.println("Thread interrupted");
                 break;
             }
