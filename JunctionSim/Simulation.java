@@ -2,98 +2,51 @@ package JunctionSim;
 
 import java.util.ArrayList;
 
-import static JunctionSim.Environment.CAR_DELAY;
+import static JunctionSim.Environment.NUMBER_OF_INTERSECTIONS;
 import static JunctionSim.Environment.SIMULATION_LENGTH;
 
 public class Simulation {
-    private TrafficController trafficCtrl;
-    private LightController lightCtrl;
-    private Junction junction;
+    private ArrayList<JuncSystem> systemList;
 
-    public Simulation() {
-        trafficCtrl = new TrafficController();
-        lightCtrl = new LightController();
-        junction = trafficCtrl.getJunction();
-    }
-
-    public ArrayList<LogEntry> runOptimized() {
-        ArrayList<LogEntry> ret = new ArrayList<>();
-        CarSpawner spawner = new CarSpawner(junction);
-        Thread spawnerThread = new Thread(spawner);
-        System.out.println("Starting spawner");
-        spawnerThread.start();
-        System.out.println("Finished Spawner");
-        // per cycle
-        for (int i = 0; i < SIMULATION_LENGTH; i++) {
-            LogEntry entry = new LogEntry();
-            entry.cycle = i;
-            entry.carsVertical = junction.getWeight(junction.verticalAxis);
-            entry.carsHorizontal = junction.getWeight(junction.horizontalAxis);
-
-            // 0 = vertical time, 1 = horizontal time; The function allocates the amount of time each axis gets for "green light"
-            int time[] = lightCtrl.computeTime(junction.getWeight(junction.verticalAxis), junction.getWeight(junction.horizontalAxis));
-            runEssential(entry, spawner, time);
-            ret.add(i, entry);
-        }
-        spawnerThread.interrupt();
-        return ret;
-    }
-    public ArrayList<LogEntry> runDefault() {
-        ArrayList<LogEntry> ret = new ArrayList<>();
-        CarSpawner spawner = new CarSpawner(junction);
-        Thread spawnerThread = new Thread(spawner);
-        System.out.println("Starting spawner");
-        spawnerThread.start();
-        System.out.println("Finished Spawner");
-        // per cycle
-        for (int i = 0; i < SIMULATION_LENGTH; i++) {
-            LogEntry entry = new LogEntry();
-            entry.cycle = i;
-            entry.carsVertical = junction.getWeight(junction.verticalAxis);
-            entry.carsHorizontal = junction.getWeight(junction.horizontalAxis);
-
-            // 0 = vertical time, 1 = horizontal time; The function allocates the amount of time each axis gets for "green light"
-            int time[] = lightCtrl.computeTime();
-            runEssential(entry, spawner, time);
-            ret.add(i, entry);
-        }
-        spawnerThread.interrupt();
-        return ret;
-    }
-    private void runEssential(LogEntry entry, CarSpawner spawner, int[] time)
+    public Simulation()
     {
-        entry.allocatedTime = time;
-
-        // Remove cars from the axis with green light for some amount of time
-        if (lightCtrl.verticalPriority) // if vertical axis has green light first
+        systemList = new ArrayList<>();
+        systemList.add(new JuncSystem());
+        for (int i = 1; i < NUMBER_OF_INTERSECTIONS; i++)
         {
-            entry.passedVerticalCars = trafficCtrl.removeCars(junction.verticalAxis, time[0]);
-            if (time[1] != 0)
-            {
-                entry.passedHorizontalCars = trafficCtrl.removeCars(junction.horizontalAxis, time[1]);
-            }
-            else entry.passedHorizontalCars = 0;
+            systemList.add(new JuncSystem());
+            systemList.get(i).setSouthConnection(systemList.get(i - 1));
+            systemList.get(i - 1).setNorthConnection(systemList.get(i));
         }
-        else // if horizontal axis has priority
+    }
+
+    public ArrayList<ArrayList<LogEntry>> run()
+    {
+        ArrayList<ArrayList<LogEntry>> logs = new ArrayList<>();
+        for (int i = 0; i < NUMBER_OF_INTERSECTIONS; i++)
+            logs.add(new ArrayList<LogEntry>());
+
+        systemList.get(0).getJunction().increment(systemList.get(1).getJunction().northDirection, 5);
+
+        for (JuncSystem system : systemList)
         {
-            entry.passedHorizontalCars = trafficCtrl.removeCars(junction.horizontalAxis, time[1]);
-            if (time[0] != 0)
+            //system.startSpawner(); // goes crazy and crashes the ComputeTimeHighDensity, dunno why
+        }
+        // per cycle
+        for (int i = 0; i < SIMULATION_LENGTH; i++)
+        {
+            LogEntry.LogEntryBuilder entryBuilder = new LogEntry.LogEntryBuilder().cycle(i);
+            ArrayList<int[]> outgoingValues = new ArrayList<>();
+            for (int j = 0; j < NUMBER_OF_INTERSECTIONS; j++)
             {
-                entry.passedVerticalCars = trafficCtrl.removeCars(junction.verticalAxis, time[0]);
+                outgoingValues.add(systemList.get(j).run(entryBuilder));
+                logs.get(j).add(entryBuilder.build());
             }
-            else  entry.passedVerticalCars = 0;
+            for (int j = 0; j < NUMBER_OF_INTERSECTIONS; j++)
+            {
+                systemList.get(j).setNeighboursWeight(outgoingValues.get(j));
+            }
         }
-
-        try {
-            Thread.sleep((entry.passedVerticalCars + entry.passedHorizontalCars) * CAR_DELAY); // + car speed? maybe multi-branch depending on times
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        // get number of cars spawned for logging purposes
-        entry.spawnedVerticalCars = spawner.getCounterSpawnedVertical();
-        spawner.setCounterSpawnedVertical(0);
-        entry.spawnedHorizontalCars = spawner.getCounterSpawnedHorizontal();
-        spawner.setCounterSpawnedHorizontal(0);
+        return logs;
     }
 }

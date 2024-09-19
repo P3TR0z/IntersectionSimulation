@@ -36,7 +36,6 @@ public class LightController
                 return ret;
             }
             ret[0] = CYCLE_LENGTH;
-            ret[1] = 0;
         }
         else
         {
@@ -49,10 +48,10 @@ public class LightController
                 return ret;
             }
             ret[1] = CYCLE_LENGTH;
-            ret[0] = 0;
         }
         return ret;
     }
+    // for now simply alternates between two of X and one of Y
     private void generateSchedule(int numberOfTurns, boolean value)
     {
         int j = numberOfTurns;
@@ -93,17 +92,15 @@ public class LightController
                 if (verticalWeight >= horizontalWeight) {
                     nTime = getNeededTime(verticalWeight / VERTICAL_WIDTH);
                     generateSchedule((nTime / CYCLE_LENGTH), true);
-                } else {
+                } else
+                {
                     nTime = getNeededTime(horizontalWeight / HORIZONTAL_WIDTH);
                     generateSchedule((nTime / CYCLE_LENGTH), false);
                 }
             }
             return computeTimeHighDensity();
         }
-        else
-        {
-            return computeTimeLowDensity(verticalWeight, horizontalWeight);
-        }
+        return computeTimeLowDensity(verticalWeight, horizontalWeight);
     }
     public int[] computeTime()
     {

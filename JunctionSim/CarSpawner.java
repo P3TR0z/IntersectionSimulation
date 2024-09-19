@@ -36,10 +36,12 @@ public class CarSpawner implements Runnable
     {
         while (true)
         {
-            j.increment(j.verticalAxis, CAR_SPAWN_AMOUNT);
-            counterSpawnedVertical.getAndAdd(CAR_SPAWN_AMOUNT * j.verticalAxis.size());
-            j.increment(j.horizontalAxis, CAR_SPAWN_AMOUNT * j.horizontalAxis.size());
-            counterSpawnedHorizontal.getAndAdd(CAR_SPAWN_AMOUNT);
+            j.increment(j.northDirection, CAR_SPAWN_AMOUNT);
+            j.increment(j.southDirection, CAR_SPAWN_AMOUNT);
+            counterSpawnedVertical.getAndAdd(CAR_SPAWN_AMOUNT * j.getVerticalWidth());
+            j.increment(j.eastDirection, CAR_SPAWN_AMOUNT);
+            j.increment(j.westDirection, CAR_SPAWN_AMOUNT);
+            counterSpawnedHorizontal.getAndAdd(CAR_SPAWN_AMOUNT * j.getHorizontalWidth());
             try
             {
                 sleep(CAR_SPAWN_DELAY);

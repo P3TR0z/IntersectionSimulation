@@ -11,7 +11,7 @@ import static JunctionSim.Environment.CAR_SPEED;
 public class TrafficController
 {
     private Junction junction;
-    private ConcurrentHashMap<Integer, Integer> previous = null;
+    private boolean previousVertical = true;
     TrafficController()
     {
         junction = new Junction();
@@ -45,12 +45,23 @@ public class TrafficController
     }
     public int removeCars(ConcurrentHashMap<Integer, Integer> axis, int time)
     {
-        if (previous == axis)
+        if ((axis == junction.northDirection || axis == junction.southDirection) && previousVertical)
         {
             return removeCarsNoDelay(axis, time);
         }
-        previous = axis;
+        if ((axis == junction.eastDirection || axis == junction.westDirection) && !previousVertical)
+        {
+            return removeCarsNoDelay(axis, time);
+        }
+        previousVertical = !previousVertical;
         return removeCarsWithDelay(axis, time);
+    }
+    // distributes the given weight evenly* across all available lanes
+    public void distributeCars(ConcurrentHashMap<Integer, Integer> axis, int weight)
+    {
+        int laneVal = weight / junction.getWidth(axis);
+        junction.increment(axis, laneVal);
+        junction.increment(axis, 0, (weight - laneVal * junction.getWidth(axis)));
     }
     public Junction getJunction()
     {

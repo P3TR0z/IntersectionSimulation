@@ -1,34 +1,20 @@
 package JunctionSim;
 
 import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@Builder // todo builder thing properly
+@Builder
+@Data
 public class LogEntry
 {
     public int cycle;
-    public int carsHorizontal;
-    public int carsVertical;
+    public int carsNorth;
+    public int carsSouth;
+    public int carsEast;
+    public int carsWest;
     public int[] allocatedTime;
-    public int passedVerticalCars;
-    public int spawnedVerticalCars;
-    public int passedHorizontalCars;
-    public int spawnedHorizontalCars;
+    public int[] outgoingCars;
+    public int spawnedVerticalCars = 0;
+    public int spawnedHorizontalCars = 0;
 
-    LogEntry(){}
-    public String getOutput()
-    {
-        String output = "";
-        output += ("Cycle " + cycle + ":\n");
-        output += ("Vertical Cars: " + carsVertical + "\n");
-        output += ("Horizontal Cars: " + carsHorizontal + "\n");
-        output += ("Allocated Vertical Time: " + allocatedTime[0] + "\n");
-        output += ("Allocated Horizontal Time: " + allocatedTime[1] + "\n");
-        output += ("Passed Vertical Cars: " + passedVerticalCars + "\n");
-        output += ("Spawned Horizontal Cars: " + spawnedHorizontalCars + "\n");
-        output += ("Passed Horizontal Cars: " + passedHorizontalCars + "\n");
-        output += ("Spawned Vertical Cars: " + spawnedVerticalCars + "\n");
-        output += ("---------------------------------\n");
-        return output;
-    }
 }
