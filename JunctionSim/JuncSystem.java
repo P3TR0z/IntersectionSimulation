@@ -2,7 +2,7 @@ package JunctionSim;
 
 import static JunctionSim.Environment.CAR_DELAY;
 
-public class JuncSystem
+public class JuncSystem // todo: make runnable
 {
     private TrafficController trafficCtrl;
     private LightController lightCtrl;
@@ -13,12 +13,15 @@ public class JuncSystem
     private JuncSystem southConnection = null;
     private JuncSystem eastConnection = null;
     private JuncSystem westConnection = null;
+    private Thread spawnerThread;
 
     public JuncSystem()
     {
         trafficCtrl = new TrafficController();
         lightCtrl = new LightController();
         junction = trafficCtrl.getJunction();
+        spawner = new CarSpawner(junction);
+        spawnerThread = new Thread(spawner);
     }
     public Junction getJunction()
     {
@@ -30,10 +33,12 @@ public class JuncSystem
     }
     public void startSpawner()
     {
-        spawner = new CarSpawner(junction);
-        Thread spawnerThread = new Thread(spawner);
         System.out.println("Starting spawner");
         spawnerThread.start();
+    }
+    public void stopSpawner()
+    {
+        spawnerThread.interrupt();
         System.out.println("Finished Spawner");
     }
     public int[] run(LogEntry.LogEntryBuilder entryBuilder)
@@ -76,10 +81,10 @@ public class JuncSystem
         }
 
         //get number of cars spawned for logging purposes
-        /*entryBuilder.spawnedVerticalCars(spawner.getCounterSpawnedVertical());
+        entryBuilder.spawnedVerticalCars(spawner.getCounterSpawnedVertical());
         spawner.setCounterSpawnedVertical(0);
         entryBuilder.spawnedHorizontalCars(spawner.getCounterSpawnedHorizontal());
-        spawner.setCounterSpawnedHorizontal(0);*/
+        spawner.setCounterSpawnedHorizontal(0);
 
         entryBuilder.outgoingCars(outgoing);
         return outgoing;

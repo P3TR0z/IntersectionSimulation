@@ -1,22 +1,51 @@
 package JunctionSim;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static JunctionSim.Environment.NUMBER_OF_INTERSECTIONS;
 import static JunctionSim.Environment.SIMULATION_LENGTH;
+import static JunctionSim.Environment.SYSTEM_LAYOUT;
 
 public class Simulation {
     private ArrayList<JuncSystem> systemList;
-
     public Simulation()
     {
         systemList = new ArrayList<>();
-        systemList.add(new JuncSystem());
-        for (int i = 1; i < NUMBER_OF_INTERSECTIONS; i++)
+        for (int i = 0; i < NUMBER_OF_INTERSECTIONS; i++)
         {
             systemList.add(new JuncSystem());
-            systemList.get(i).setSouthConnection(systemList.get(i - 1));
-            systemList.get(i - 1).setNorthConnection(systemList.get(i));
+        }
+        for (int i = 0; i < SYSTEM_LAYOUT.size(); i++)
+        {
+            Integer[] con = SYSTEM_LAYOUT.get(i);
+            switch (con[1])
+            {
+                case 0:
+                {
+                    systemList.get(con[0]).setNorthConnection(systemList.get(con[2]));
+                    break;
+                }
+                case 1:
+                {
+                    systemList.get(con[0]).setSouthConnection(systemList.get(con[2]));
+                    break;
+                }
+                case 2:
+                {
+                    systemList.get(con[0]).setEastConnection(systemList.get(con[2]));
+                    break;
+                }
+                case 3:
+                {
+                    systemList.get(con[0]).setWestConnection(systemList.get(con[2]));
+                    break;
+                }
+                default:
+                {
+                    throw new RuntimeException("Invalid SYSTEM_LAYOUT format");
+                }
+            }
         }
     }
 
@@ -30,8 +59,9 @@ public class Simulation {
 
         for (JuncSystem system : systemList)
         {
-            //system.startSpawner(); // goes crazy and crashes the ComputeTimeHighDensity, dunno why
+            system.startSpawner();
         }
+
         // per cycle
         for (int i = 0; i < SIMULATION_LENGTH; i++)
         {
@@ -46,6 +76,11 @@ public class Simulation {
             {
                 systemList.get(j).setNeighboursWeight(outgoingValues.get(j));
             }
+        }
+
+        for (JuncSystem system : systemList)
+        {
+            system.stopSpawner();
         }
         return logs;
     }

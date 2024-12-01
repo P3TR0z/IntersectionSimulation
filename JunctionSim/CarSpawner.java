@@ -45,8 +45,7 @@ public class CarSpawner implements Runnable
             try
             {
                 sleep(CAR_SPAWN_DELAY);
-            }
-            catch (InterruptedException e)
+            } catch (InterruptedException e)
             {
                 System.out.println("Thread interrupted");
                 break;
